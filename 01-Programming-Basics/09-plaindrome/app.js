@@ -1,19 +1,24 @@
-
+// palindrome number
 
 let n = 121;
-let rev = 0;
-let nCopt = n;
-while (n > 0) {
-    let rem  = n % 10;
-    rev = (10 * rev) + rem;
-    n = Math.floor(n / 10);   
-}
-if (rev === nCopt) {
-    console.log("its plaindrome");
-    
-} else {
-    console.log("no");
+
+function palindrome(n) {
+    let temp = n;
+    let reverse = 0;
+    while (n > 0) {
+        let digit = n % 10;
+        reverse = reverse * 10 + digit;
+        n = Math.floor(n / 10)
+    }
+
+    if (reverse === temp) {
+        return true;
+    } else {
+        return false;
+    }
+   
     
 }
 
-
+let palindromeNumber = palindrome(n);
+console.log(palindromeNumber);

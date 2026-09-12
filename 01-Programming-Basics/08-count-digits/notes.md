@@ -1,135 +1,236 @@
-# 🧠 Mistakes & Aha Moments
+# Count Digits
 
-## 1. `%` vs `/`
+## 1. Problem
 
-`%` → remainder
-`/` → division result
-
-For digit problems:
-
-`n % 10` → take last digit
-`Math.floor(n / 10)` → remove last digit
-
----
-
-## 2. Variable reassignment
-
-`let rem = n % 10`
-
-→ n stays unchanged
-→ remainder is stored in rem
-
-But:
-
-`n = n % 10`
-
-→ n is replaced by the remainder.
-
----
-
-## 3. Dry Run
-
-Don't immediately write code.
-
-First:
-Input → Output → Manual solution → Repeating action
-→ What to remember → Progress → Stop condition → Code
-
----
-
-## 4. FOR vs WHILE
-
-FOR → known number of repetitions.
-
-WHILE → unknown number of repetitions / condition-based repetition.
-
-# Number Problems - Notes
-
-## Count Digits
-
-### Problem
-Given a number, count how many digits it has.
-
-Example:
-53210 → 5 digits
-
-### My Approach
-1. Input is the number.
-2. I need a `count` variable to remember how many digits I processed.
-3. Remove one digit at a time.
-4. Increase `count` each time.
-5. Stop when `n` becomes 0.
-
-### Important Digit Operations
-
-`n % 10`
-→ gives the last digit (remainder)
-
-`Math.floor(n / 10)`
-→ removes the last digit by keeping the whole-number quotient.
+Given a number, find how many digits it contains.
 
 Example:
 
-53210 % 10 → 0
+```text
+Input: 2356789
+Output: 7
+```
 
-Math.floor(53210 / 10) → 5321
+---
 
+## 2. My Observation 💡
 
-### Important Variable Roles
+I noticed that I can remove **one digit at a time** from the number.
 
-`n`
-→ working number. It keeps getting smaller.
+```text
+2356789
+   ↓
+235678
+   ↓
+23567
+   ↓
+2356
+   ↓
+235
+   ↓
+23
+   ↓
+2
+   ↓
+0
+```
 
-`rem`
-→ temporarily stores the last digit.
+Every time I remove one digit, I increase the count by 1.
 
-`count`
-→ remembers how many digits were processed.
+---
+
+## 3. Logic
+
+I need:
+
+* `count` → remembers how many digits I processed
+* `num` → the working number that keeps getting smaller
+
+Repeat while `num > 0`:
+
+1. Get the last digit using `% 10`
+2. Increase `count`
+3. Remove the last digit using `Math.floor(num / 10)`
+
+Stop when `num` becomes `0`.
+
+---
+
+## 4. Important Operations 🔑
+
+### `% 10`
+
+Gets the last digit.
+
+```js
+2356789 % 10
+// 9
+```
 
 Important:
-`n = n % 10` replaces `n` with the remainder.
+`%` does NOT change the number.
 
-If I don't want to lose `n`:
+---
 
-`let rem = n % 10;`
+### `Math.floor(num / 10)`
 
-### Mistakes I Made
+Removes the last digit for a positive integer.
 
-1. I initially wrote:
-   `n = n % 10`
+```js
+Math.floor(2356789 / 10)
+// 235678
+```
 
-   This changed `n` into the remainder.
+This DOES change `num` when we assign it:
 
-2. I forgot that `%` gives the remainder.
+```js
+num = Math.floor(num / 10);
+```
 
-3. I confused quotient and remainder.
+---
 
-4. I didn't understand why `5 / 10 = 0.5`.
+## 5. Why `while`?
 
-5. I learned that when the divisor cannot fit into the number even once,
-   the whole-number quotient starts with 0.
+I don't know beforehand how many times I need to repeat.
 
-### FOR vs WHILE
+For example:
 
-FOR
-→ use when the number of repetitions is known.
+```text
+12       → 2 times
+583      → 3 times
+2356789  → 7 times
+```
 
-WHILE
-→ use when the number of repetitions is unknown and we repeat
-   until a condition becomes false.
+So I use:
 
-Example:
+```js
+while (num > 0)
+```
 
-Count digits → `while`
-because we don't know beforehand how many digits the number has.
+`while` is useful when the number of repetitions depends on a condition.
 
-### Dry Run
+---
 
-53210
+## 6. Dry Run 🔍
 
-53210 → 5321 → 532 → 53 → 5 → 0
+Input:
 
-count:
-1 → 2 → 3 → 4 → 5
+```text
+num = 2356789
+count = 0
+```
 
-Final answer = 5
+|     num | last digit | count |
+| ------: | ---------: | ----: |
+| 2356789 |          9 |     1 |
+|  235678 |          8 |     2 |
+|   23567 |          7 |     3 |
+|    2356 |          6 |     4 |
+|     235 |          5 |     5 |
+|      23 |          3 |     6 |
+|       2 |          2 |     7 |
+|       0 |       stop |     7 |
+
+Answer:
+
+```text
+7
+```
+
+---
+
+## 7. My Mistakes / Aha Moments 🧠
+
+### Mistake 1
+
+I initially thought:
+
+```js
+num % 10
+```
+
+would change `num`.
+
+But `%` only calculates the remainder.
+
+```js
+let rem = num % 10;
+```
+
+`num` stays the same.
+
+---
+
+### Mistake 2
+
+I used:
+
+```js
+n = Math.floor(num / 10);
+```
+
+inside the function.
+
+But `num` is the function's working variable, so I need to update:
+
+```js
+num = Math.floor(num / 10);
+```
+
+---
+
+### Aha 💡
+
+The function doesn't automatically repeat.
+
+If I want to process every digit, the digit-processing logic must be inside a loop.
+
+---
+
+## 8. Core Pattern 🧩
+
+Many number problems follow this pattern:
+
+```text
+Get last digit
+      ↓
+Process the digit
+      ↓
+Remove last digit
+      ↓
+Repeat
+```
+
+The two important operations are:
+
+```js
+num % 10
+```
+
+→ get last digit
+
+```js
+Math.floor(num / 10)
+```
+
+→ remove last digit
+
+This same idea will be useful for:
+
+* Reverse Number
+* Palindrome Number
+* Sum of Digits
+* Product of Digits
+* Largest Digit
+* Count a particular digit
+* Even/Odd digits
+
+---
+
+## 9. Main Lesson 🔥
+
+Don't memorize the Count Digits code.
+
+Remember the observation:
+
+> **"One digit can be processed by taking `% 10`, then I can remove that digit using `Math.floor(num / 10)`. Repeat until the number becomes 0."**
